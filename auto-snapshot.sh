@@ -21,5 +21,5 @@ OLD_SNAPSHOTS=$(curl https://api.digitalocean.com/v2/snapshots?resource_type=vol
 
 for SNAPSHOT_ID in $OLD_SNAPSHOTS
 do
-    curl -X DELETE -H 'Content-Type: application/json' -H 'Authorization: Bearer $DIGITALOCEAN_TOKEN' "https://api.digitalocean.com/v2/snapshots/$SNAPSHOT_ID"
+    curl -X DELETE -H 'Content-Type: application/json' -H "authorization: Bearer $DIGITALOCEAN_TOKEN" "https://api.digitalocean.com/v2/snapshots/$SNAPSHOT_ID"
 done
