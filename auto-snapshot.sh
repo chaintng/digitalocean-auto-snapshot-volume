@@ -17,9 +17,12 @@ curl -X POST \
 }"
 
 ## Currently, it will keep 2 newest snapshots. If you want to config this, change [2:] to other value. E.g. [1:] for keep only the newest snapshot.
-OLD_SNAPSHOTS=$(curl https://api.digitalocean.com/v2/snapshots?resource_type=volume -H "authorization: Bearer $DIGITALOCEAN_TOKEN" -H 'cache-control: no-cache' -H 'content-type: application/json' | jq ".snapshots[2:][] | .id" | sed "s/\"//g")
+OLD_SNAPSHOTS=$(curl https://api.digitalocean.com/v2/snapshots?resource_type=volume \
+-H "authorization: Bearer $DIGITALOCEAN_TOKEN" -H 'cache-control: no-cache' \
+-H 'content-type: application/json' | jq ".snapshots|sort_by(.created_at)[:-2][] | .id" | sed "s/\"//g")
 
 for SNAPSHOT_ID in $OLD_SNAPSHOTS
 do
-    curl -X DELETE -H 'Content-Type: application/json' -H "authorization: Bearer $DIGITALOCEAN_TOKEN" "https://api.digitalocean.com/v2/snapshots/$SNAPSHOT_ID"
+    curl -X DELETE -H 'Content-Type: application/json' \
+    -H "authorization: Bearer $DIGITALOCEAN_TOKEN" "https://api.digitalocean.com/v2/snapshots/$SNAPSHOT_ID"
 done
